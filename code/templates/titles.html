@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post">
+        {{ queryform.csrf_token() }}
+        {{ queryform.query_title.label }}{{ queryform.query_title }}<br>
+        {{ queryform.submit }}<br>
+        {# 显示消息闪现的内容 #}
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            {% if category == 'user': %}
+                <a href="{{ url_for("show_user" , user_name=message) }}">{{ message }}
+            {% else: %}
+                {{ message }}
+            {% endif %}
+        {% endfor %}
+    </form>
+
+    <a href="{{ url_for("back") }}">返回</a>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form method="post">
+    {{ form.csrf_token() }}
+    {{ form.title.label }}{{ form.title }}<br>
+    {{ form.user.label }}{{ form.user }}<br>
+    {{ form.gender.label }}{{ form.gender }}<br>
+    {{ form.submit }}<br>
+    {# 显示消息闪现的内容 #}
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category == 'message':%}
+            {{ message }}
+        {% endif %}
+    {% endfor %}
+</form>
+
+<hr>
+
+{#先遍历作者, 然后在作者里遍历书籍#}
+
+<ul>
+    {% for title in titles %}
+        <li>{{ title.name }}<a href="{{ url_for("delete_title", title_id=title.id) }}">删除</a></li>
+        <ul>
+            {% for user in title.users %}
+                <li>{{ user.name }}<a href="{{ url_for("delete_user", user_id=user.id) }}">删除</a></li>
+            {% else %}
+                <li>无</li>
+            {% endfor %}
+
+        </ul>
+    {% endfor %}
+
+</ul>
+
+<hr>
+
+<a href="{{ url_for("query_users") }}">用户检索</a>
+
+<a href="{{ url_for("query_titles") }}">类型检索</a>
+
+</body>
+</html>
