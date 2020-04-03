@@ -11,7 +11,7 @@ importlib.reload(sys)
 app = Flask(__name__)
 
 # 数据库配置: 数据库地址/关闭自动跟踪修改
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:731006hmj@127.0.0.1/dbtest'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@127.0.0.1/dbtest'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'itheima'
 
