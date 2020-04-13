@@ -1,0 +1,22 @@
+<!-- app/templates/user/profile/profile.html -->
+
+{% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block body %}
+<div class="content-section">
+  {{ utils.flashed_messages() }}
+  <div class="center">
+    <h1>Profile</h1>
+    <br/>
+    {{ wtf.quick_form(form) }}
+    {% if not edit %}
+        <a href="{{ url_for('user.edit_profile', id=current_user.id) }}" class="btn btn-default btn-lg">
+            <i class="fa fa-pencil"></i>
+            Edit Profile
+        </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
