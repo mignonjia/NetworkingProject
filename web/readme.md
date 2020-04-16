@@ -64,6 +64,8 @@ flask run
 ```
 
 **update**: 可以不设置`FLASK_CONFIG`和`FLASK_APP`,直接使用`python run.py`运行
+
+
 如果在Migrate阶段报错`ERROR [root] Error: Can't locate revision identified by '0066c544c2f8'           `, 那么需要把dbtest中的版本信息删除。
 
 ```
