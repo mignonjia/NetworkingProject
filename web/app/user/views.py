@@ -1,11 +1,14 @@
+import sys
+import traceback
+import time
 from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import user
 from ..forms import RecordForm, EditRecordForm
 from .. import db
-from .forms import EmployeeInfoForm, EditEmployeeInfoForm
-from ..models import Employee, Record
+from ..forms import PatientInfoForm, EditPatientInfoForm
+from ..models import Patient, Record
 
 def check_user():
     # prevent non-admins from accessing the page
@@ -21,15 +24,16 @@ def profile(id):
     
     check_user()
     
-    employee = Employee.query.get_or_404(id)
-    form = EmployeeInfoForm(
-        email=employee.email,
-        username=employee.username,
-        first_name=employee.first_name,
-        last_name=employee.last_name,
-        age=employee.age,
-        gender=employee.gender,
-        health_status=employee.health_status,
+    patient = Patient.query.get_or_404(id)
+    form = PatientInfoForm(
+        phone_number=patient.phone_number,
+        username=patient.username,
+        first_name=patient.first_name,
+        last_name=patient.last_name,
+        age=patient.age,
+        height=patient.height,
+        gender=patient.gender,
+        health_status=patient.health_status,
         )
     
     return render_template('user/profile/profile.html',
@@ -47,41 +51,32 @@ def edit_profile(id):
     """
     
     check_user()
-    employee = Employee.query.get_or_404(id)
-    '''
-    form = EditEmployeeInfoForm(
-        email=employee.email,
-        username=employee.username,
-        first_name=employee.first_name,
-        last_name=employee.last_name,
-        age=employee.age,
-        gender=employee.gender,
-        health_status=employee.health_status,
-        )
-    '''
-    form = EditEmployeeInfoForm(obj=employee)
-    form.gender =  employee.gender
+    patient = Patient.query.get_or_404(id)
+    form = EditPatientInfoForm(obj=patient)
+    form.gender =  patient.gender
     if form.validate_on_submit():
-        employee.email = form.email.data
-        employee.username = form.username.data
-        employee.first_name = form.first_name.data
-        employee.last_name = form.last_name.data
-        employee.age = form.age.data
-        employee.gender = form.gender
-        employee.health_status = form.health_status.data
+        patient.phone_number = form.phone_number.data
+        patient.username = form.username.data
+        patient.first_name = form.first_name.data
+        patient.last_name = form.last_name.data
+        patient.age = form.age.data
+        patient.height = form.height.data
+        patient.gender = form.gender
+        patient.health_status = form.health_status.data
         db.session.commit()
         flash('You have successfully edited the record.')
 
         # redirect to the records page
-        return redirect(url_for('user.profile', edit=False, id=employee.id))
+        return redirect(url_for('user.profile', edit=False, id=patient.id))
         
-    form.email = employee.email
-    form.username = employee.username
-    form.first_name = employee.first_name
-    form.last_name = employee.last_name
-    form.age = employee.age
-    form.gender =  employee.gender
-    form.health_status = employee.health_status
+    form.phone_number = patient.phone_number
+    form.username = patient.username
+    form.first_name = patient.first_name
+    form.last_name = patient.last_name
+    form.age = patient.age
+    form.height = patient.height
+    form.gender =  patient.gender
+    form.health_status = patient.health_status
     edit = True
     return render_template('user/profile/profile.html', 
                            form=form,
@@ -97,9 +92,9 @@ def list_records(id):
     
     check_user()
     
-    employee = Employee.query.get_or_404(id)
+    patient = Patient.query.get_or_404(id)
     
-    records = db.session.query(Record).filter(Record.employee_id==id)
+    records = db.session.query(Record).filter(Record.patient_id==id)
     
     return render_template('user/records/records.html',
                            records=records, title='Records')
@@ -113,22 +108,24 @@ def add_record(id):
     check_user()
     add_record = True
     
-    employee = db.session.query(Employee).filter(Employee.id==id)
-    # TODO: set default value of employee to current user.
-    form = EditRecordForm(employee=employee)
+    patient = db.session.query(Patient).filter(Patient.id==id)
+    # TODO: set default value of Patient to current user.
+    form = EditRecordForm(patient=patient)
     
     if form.validate_on_submit():
         record = Record(name=form.name.data,
             description=form.description.data,
-            employee=form.employee.data)
-        # TODO: check if record.employee = id
+            patient=form.patient.data,
+            time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),)
+        # TODO: check if record.Patient = id
         try:
             db.session.add(record)
             db.session.commit()
             flash('You have successfully added a new record.')
         except:
-            # in case record name already exists
-            flash('Error: record name already exists.')
+            flash('Error.\n', record.patient.username, ' ' , record.name, ' ' , record.time,  ' ', record.description)
+            #flash(str(e), '  === \n', e.message)
+            traceback.print_exc()
         # redirect to records page
         return redirect(url_for('user.list_records', id=id))
 
@@ -137,6 +134,23 @@ def add_record(id):
                            add_record=add_record, form=form,
                            title="Add Record")
         
+@user.route('/records/show/<int:id>', methods=['GET', 'POST'])
+@login_required
+def show_record(id):
+    """
+    Edit a record
+    """
+    check_user()
+    record = Record.query.get_or_404(id)
+    form = RecordForm(obj=record)
+    return render_template('user/records/record.html', action="Show",
+                           add_record=False, 
+                           edit_record=False, 
+                           record=record, 
+                           form=form,
+                           id=record.id,
+                           title="Show Record")
+
 
 @user.route('/records/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -147,23 +161,25 @@ def edit_record(id):
     check_user()
 
     add_record = False
+    edit_record = True
 
     record = Record.query.get_or_404(id)
     form = EditRecordForm(obj=record)
     if form.validate_on_submit():
         record.name = form.name.data
+        record.time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         record.description = form.description.data
-        record.employee = form.employee.data
+        record.patient = form.patient.data
         db.session.commit()
         flash('You have successfully edited the record.')
 
         # redirect to the records page
-        return redirect(url_for('user.list_records', id=record.employee_id))
+        return redirect(url_for('user.list_records', id=record.patient_id))
 
     form.description.data = record.description
     form.name.data = record.name
     return render_template('user/records/record.html', action="Edit",
-                           add_record=add_record, form=form,
+                           add_record=add_record, edit_record=edit_record, form=form,
                            record=record, title="Edit Record")
 
 
@@ -181,7 +197,7 @@ def delete_record(id):
     flash('You have successfully deleted the record.')
 
     # redirect to the records page
-    return redirect(url_for('user.list_records', id=record.employee_id))
+    return redirect(url_for('user.list_records', id=record.patient_id))
 
     return render_template(title="Delete Record")
 

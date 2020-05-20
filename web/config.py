@@ -4,6 +4,7 @@ class Config(object):
     """
 
     # Put any configurations here that are common across all environments
+    POSTS_PER_PAGE = 3
 
 class DevelopmentConfig(Config):
     """

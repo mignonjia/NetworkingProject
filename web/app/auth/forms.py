@@ -4,18 +4,19 @@ from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, ValidationError, IntegerField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo
 
-from ..models import Employee
+from ..models import Patient
 
 class RegistrationForm(FlaskForm):
     """
     Form for users to create new account
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone_number = StringField('Phone Number', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     
     age = IntegerField('Age', validators=[DataRequired()])
+    height = IntegerField('Height', validators=[DataRequired()])
     gender = SelectField('Gender', 
         choices=[('female','female'), ('male', 'male')], 
         validators=[DataRequired()],
@@ -32,19 +33,19 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password')
     submit = SubmitField('Register')
 
-    def validate_email(self, field):
-        if Employee.query.filter_by(email=field.data).first():
-            raise ValidationError('Email is already in use.')
+    def validate_phone_number(self, field):
+        if Patient.query.filter_by(phone_number=field.data).first():
+            raise ValidationError('Phone number is already in use.')
 
     def validate_username(self, field):
-        if Employee.query.filter_by(username=field.data).first():
+        if Patient.query.filter_by(username=field.data).first():
             raise ValidationError('Username is already in use.')
 
 class LoginForm(FlaskForm):
     """
     Form for users to login
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone_number = StringField('Phone Number', validators=[DataRequired()]) #TODO: validate.
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
     

@@ -1,6 +1,7 @@
 <!-- app/templates/admin/records/records.html -->
 
 {% import "bootstrap/utils.html" as utils %}
+{% import "admin/records/page.html" as pg %}
 {% extends "base.html" %}
 {% block title %}Records{% endblock %}
 {% block body %}
@@ -12,24 +13,41 @@
         {{ utils.flashed_messages() }}
         <br/>
         <h1 style="text-align:center;">Records</h1>
-        {% if records %}
+        
+        
+        {% if search_form %}
+            {{ wtf.quick_form(search_form) }}
+        {% endif %}
+        
+        <!--
+        <div class="center">
+            <form method="post" action="{{url_for('admin.list_paged_records', page=1)}}">
+            <input type="text" name="search_id" id="search_id" placeholder="name">
+            <input type="submit" value="search">
+            </form>
+        </div>
+        -->
+        {% if page_data %}
           <hr class="intro-divider">
           <div class="center">
             <table class="table table-striped table-bordered">
               <thead>
                 <tr>
+                  <th width="15%"> Time </th>
                   <th width="15%"> Name </th>
-                  <th width="30%"> Description </th>
-                  <th width="15%"> EmployeeName </th>
+                  <th width="15%"> Contents </th>
+                  <th width="15%"> PatientName </th>
                   <th width="10%"> Edit </th>
                   <th width="25%"> Delete </th>
                 </tr>
               </thead>
               <tbody>
-              {% for record in records %}
+              {% for record in page_data.items %}
                 <tr>
+                  <td>
+                    {{ record.time }}
+                  </td>
                   <td> 
-                  
                     <a href="{{ url_for('admin.show_record', id=record.id) }}">
                       <i class="fa fa-file"></i> {{ record.name }}  
                     </a>
@@ -38,8 +56,8 @@
                     {{ record.description }}
                   </td>
                   <td>
-                    {% if record.employee %}
-                      {{ record.employee.first_name }} {{ record.employee.last_name }}
+                    {% if record.patient_name %}
+                      {{ record.patient_name }}
                     {% else %}
                       -
                     {% endif %}
@@ -56,8 +74,15 @@
                   </td>
                     </tr>
               {% endfor %}
+              
+                <tfoot>
+                        <div class="pagination-info pull-left">共有{{ page_data.total }}条，每页显示：{{ page_data.per_page }}条
+                        </div>
+                </tfoot>
+                
               </tbody>
             </table>
+                        {{ pg.my_paginate(page_data, 'admin.list_paged_records') }}
           </div>
           <div style="text-align: center">
         {% else %}

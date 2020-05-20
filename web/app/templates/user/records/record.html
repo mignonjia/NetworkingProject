@@ -6,7 +6,11 @@
     {% if add_record %}
         Add Record
     {% else %}
+      {% if add_record %}
         Edit Record
+      {% else %}
+        Show Record
+      {% endif %}
     {% endif %}
 {% endblock %}
 {% block body %}
@@ -18,7 +22,11 @@
             {% if add_record %}
                 <h1>Add Record</h1>
             {% else %}
-                <h1>Edit Record</h1>
+              {% if add_record %}
+                Edit Record
+              {% else %}
+                Show Record
+              {% endif %}
             {% endif %}
             <br/>
             {{ wtf.quick_form(form) }}

@@ -3,41 +3,13 @@ from wtforms import StringField, SubmitField, TextAreaField, IntegerField, Selec
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email
 
-from .models import Department, Role, Employee
+from .models import Record, Patient
 
 class ReadonlyTextField(TextField):
   def __call__(self, *args, **kwargs):
     kwargs.setdefault('readonly', True)
     return super(ReadonlyTextField, self).__call__(*args, **kwargs)
 
-class DepartmentForm(FlaskForm):
-    """
-    Form for admin to add or edit a department
-    """
-    name = StringField('Name', validators=[DataRequired()])
-    description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class RoleForm(FlaskForm):
-    """
-    Form for admin to add or edit a role
-    """
-    name = StringField('Name', validators=[DataRequired()])
-    description = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class EmployeeAssignForm(FlaskForm):
-    """
-    Form for admin to assign departments and roles to employees
-    """
-    department = QuerySelectField(query_factory=lambda: Department.query.all(),
-                                  get_label="name")
-    role = QuerySelectField(query_factory=lambda: Role.query.all(),
-                            get_label="name")
-    submit = SubmitField('Submit')
-    
 
     
 class RecordForm(FlaskForm):
@@ -45,8 +17,9 @@ class RecordForm(FlaskForm):
     Form for users to upload physical examination results.
     """
     name = ReadonlyTextField('Name')
+    time = ReadonlyTextField('Time')
+    patient = ReadonlyTextField()
     description = ReadonlyTextField('Description')
-    employee = ReadonlyTextField()
     
 class EditRecordForm(FlaskForm):
     """
@@ -54,8 +27,48 @@ class EditRecordForm(FlaskForm):
     """
     name = StringField('Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    employee = QuerySelectField(
-        query_factory=lambda: Employee.query.all(), get_label="username")
+    patient = QuerySelectField(
+        query_factory=lambda: Patient.query.all(), get_label="username")
     submit = SubmitField('Submit')
     
+    
+
+class PatientInfoForm(FlaskForm):
+    """
+    Form for an user to edit personal profile.
+    """
+    phone_number = ReadonlyTextField('Phone Number')
+    username = ReadonlyTextField('Username')
+    first_name = ReadonlyTextField('First Name')
+    last_name = ReadonlyTextField('Last Name')
+    
+    age = ReadonlyTextField('Age')
+    height = ReadonlyTextField('Height')
+    gender = ReadonlyTextField('Gender')
+    health_status = ReadonlyTextField('Health Status')
+
+class EditPatientInfoForm(FlaskForm):
+    """
+    Form for an user to edit personal profile.
+    """
+    phone_number = ReadonlyTextField('Phone Number')
+    username = ReadonlyTextField('Username')
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    
+    age = IntegerField('Age', validators=[DataRequired()])
+    height = IntegerField('Height', validators=[DataRequired()])
+    gender = SelectField('Gender', 
+        choices=[('female','female'), ('male', 'male')], 
+        validators=[DataRequired()],
+        coerce=str)
+    health_status = SelectField('Health Status', 
+        choices=[('Normal','Normal'), ('Confirmed Case', 'Confirmed Case'), ('Suspected Case', 'Suspected Case')], 
+        validators=[DataRequired()],
+        coerce=str)
+    submit = SubmitField('Submit')
+
+class SearchForm(FlaskForm):
+    search_keyword = StringField('name of user', validators = [DataRequired()])
+    submit = SubmitField('Search')
     

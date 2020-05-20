@@ -1,6 +1,6 @@
 ## Health Information Management System
 
-环境是Windows系统，使用python3+virtualenv，其他的依赖在`requirements.txt`中列出。
+使用python3+virtualenv，其他的依赖在`requirements.txt`中列出。
 
 目录结构：
 
@@ -48,19 +48,29 @@ SQLALCHEMY_DATABASE_URI = 'mysql://dt_admin:dt2020@localhost/dbtest'
 mysql -u root -p dbtest < database_dump.txt #导入已有的数据库
 ```
 
-3.运行。
+3.启动。
 
-打开cmd，依次执行：
+如果是Windows系统，打开cmd，依次执行：
 
 ```
 set FLASK_CONFIG=development
 set FLASK_APP=run.py
+```
 
+如果是Linux/Mac系统，打开bash按如下操作
+
+```
+$export FLASK_CONFIG=development
+$export FLASK_APP=run.py
+```
+
+
+
+```
 flask db init
 flask db migrate
 flask db upgrade
 
-flask run
 ```
 
 如果在Migrate阶段报错`ERROR [root] Error: Can't locate revision identified by '0066c544c2f8'           `, 那么需要把dbtest中的版本信息删除。
@@ -73,6 +83,34 @@ drop table alembic_version;
 
 对模型的任何修改，都要再执行flask db migrate, flask db upgrade. 
 
+添加管理员账户：
+
+```
+>flask shell
+
+from app.models import Patient
+from app import db
+admin = Patient(phone_number="00000000000",username="admin",password="admin2016",is_admin=True)
+db.session.add(admin)
+db.session.commit()
+```
+
+最后，运行
+
+```
+flask run
+```
+
+在浏览器打开`localhost:5000`访问网页。
 
 
-最后，运行`flask run`，在浏览器打开`localhost:5000`访问网页。
+
+search
+
+ref:
+
+*动态表 https://cloud.tencent.com/developer/ask/143100 
+
+用json传  https://blog.csdn.net/caoyu1221/article/details/89471018 
+
+搜索栏样式navbar:  https://www.cnblogs.com/kaerxifa/p/11875654.html 

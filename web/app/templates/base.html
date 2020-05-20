@@ -5,6 +5,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/pagination.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
@@ -24,10 +25,8 @@
                   {% if current_user.is_authenticated %}
                     {% if current_user.is_admin %}
                       <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
-                      <li><a href="{{ url_for('admin.list_departments') }}">Departments</a></li>
-                      <li><a href="{{ url_for('admin.list_roles') }}">Roles</a></li>
-                      <li><a href="{{ url_for('admin.list_employees') }}">Employees</a></li>
-                      <li><a href="{{ url_for('admin.list_records') }}">Records</a></li>
+                      <li><a href="{{ url_for('admin.list_patients') }}">Patients</a></li>
+                      <li><a href="{{ url_for('admin.list_paged_records', page=1) }}">Records</a></li>
                     {% else %}
                       <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
                       <li><a href="{{ url_for('user.list_records', id=current_user.id) }}">Records</a></li>
@@ -64,7 +63,6 @@
                         <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                       {% endif %}
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy; 2016. All Rights Reserved</p>
                 </div>
             </div>
         </div>

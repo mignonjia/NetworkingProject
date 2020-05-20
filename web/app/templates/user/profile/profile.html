@@ -12,10 +12,14 @@
     <br/>
     {{ wtf.quick_form(form) }}
     {% if not edit %}
+      {% if current_user.is_admin %}
+      
+      {% else %}
         <a href="{{ url_for('user.edit_profile', id=current_user.id) }}" class="btn btn-default btn-lg">
             <i class="fa fa-pencil"></i>
             Edit Profile
         </a>
+      {% endif %}
     {% endif %}
   </div>
 </div>
