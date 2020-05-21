@@ -114,3 +114,13 @@ ref:
 用json传  https://blog.csdn.net/caoyu1221/article/details/89471018 
 
 搜索栏样式navbar:  https://www.cnblogs.com/kaerxifa/p/11875654.html 
+
+### 服务器部署
+
+`ssh root@60.205.255.187`登录服务器,密码为`Networking2020`
+
+项目位于`/var/www/web`目录中
+
+nginx配置文件位于`/etc/nginx/sites-enabled/default`
+
+uwsgi配置文件位于`/var/www/web/config.ini`
