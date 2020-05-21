@@ -48,6 +48,14 @@ SQLALCHEMY_DATABASE_URI = 'mysql://dt_admin:dt2020@localhost/dbtest'
 mysql -u root -p dbtest < database_dump.txt #导入已有的数据库
 ```
 
+导出数据库：
+
+```
+mysqldump -u root -p dbtest > database_dump.txt #导出
+```
+
+
+
 3.启动。
 
 如果是Windows系统，打开cmd，依次执行：
@@ -72,6 +80,11 @@ flask db migrate
 flask db upgrade
 
 ```
+
+**update**: 可以不设置`FLASK_CONFIG`和`FLASK_APP`,直接使用`python run.py`运行
+
+update: 用设置`FLASK_CONFIG`和`FLASK_APP`的方法更加规范，而且方便区分开发部署。
+
 
 如果在Migrate阶段报错`ERROR [root] Error: Can't locate revision identified by '0066c544c2f8'           `, 那么需要把dbtest中的版本信息删除。
 
@@ -103,14 +116,4 @@ flask run
 
 在浏览器打开`localhost:5000`访问网页。
 
-
-
-search
-
-ref:
-
-*动态表 https://cloud.tencent.com/developer/ask/143100 
-
-用json传  https://blog.csdn.net/caoyu1221/article/details/89471018 
-
-搜索栏样式navbar:  https://www.cnblogs.com/kaerxifa/p/11875654.html 
+最后，运行`flask run`，在浏览器打开`localhost:5000`访问网页。

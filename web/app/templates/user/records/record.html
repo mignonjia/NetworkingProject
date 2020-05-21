@@ -5,6 +5,9 @@
 {% block title %}
     {% if add_record %}
         Add Record
+        <script src="myScript.js">
+        </script>
+        
     {% else %}
       {% if add_record %}
         Edit Record
@@ -14,6 +17,42 @@
     {% endif %}
 {% endblock %}
 {% block body %}
+<script type="text/javascript">
+// from https://www.cnblogs.com/lijuntao/p/6439596.html
+function showError(error){ 
+  switch(error.code) { 
+    case error.PERMISSION_DENIED: 
+      alert("定位失败,用户拒绝请求地理定位"); 
+      break; 
+    case error.POSITION_UNAVAILABLE: 
+      alert("定位失败,位置信息是不可用"); 
+      break; 
+    case error.TIMEOUT: 
+      alert("定位失败,请求获取用户位置超时"); 
+      break; 
+    case error.UNKNOWN_ERROR: 
+      alert("定位失败,定位系统失效"); 
+      break; 
+  } 
+} 
+
+function showPosition(position){ 
+  var latlon = position.coords.latitude+','+position.coords.longitude; 
+  var lat = position.coords.latitude; //纬度 
+  var log = position.coords.longitude; //经度 
+  alert('纬度:'+lat+',经度:'+log); 
+  document.getElementById("lat").innerHTML=lat;
+  document.getElementById("log").innerHTML=log;
+}; 
+function getLocation(){ 
+  if (navigator.geolocation){ 
+    navigator.geolocation.getCurrentPosition(showPosition,showError); 
+  }else{ 
+    alert("浏览器不支持地理定位。"); 
+  } 
+} 
+
+</script>
 <div class="content-section">
  <div class="outer">
     <div class="middle">
@@ -30,6 +69,9 @@
             {% endif %}
             <br/>
             {{ wtf.quick_form(form) }}
+            <button onclick="getLocation()">获取地理位置信息</button>
+            <p> 纬度：</p><p id="lat"> 纬度信息</p>
+            <p> 经度：</p><p id="log"> 经度信息</p>
         </div>
       </div>
     </div>

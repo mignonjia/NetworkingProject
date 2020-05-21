@@ -16,7 +16,7 @@ class RegistrationForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     
     age = IntegerField('Age', validators=[DataRequired()])
-    height = IntegerField('Height', validators=[DataRequired()])
+    height = IntegerField('Height (in cm)', validators=[DataRequired()])
     gender = SelectField('Gender', 
         choices=[('female','female'), ('male', 'male')], 
         validators=[DataRequired()],

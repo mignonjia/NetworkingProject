@@ -8,7 +8,7 @@ DBNAME = 'dbtest' #这里一定一定要换成你设置的database名字，可�
 try:
     db = pymysql.connect(DBHOST, DBUSER, DBPASS, DBNAME) 
     cur = db.cursor()
-    cur.execute('DROP TABLE IF EXISTS Student')
+    cur.execute('DROP TABLE IF EXISTS user')
     sqlQuery = "CREATE TABLE user(user CHAR(20), password CHAR(20))"
     cur.execute(sqlQuery)
     print('表格创建成功!')
