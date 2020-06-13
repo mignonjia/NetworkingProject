@@ -1,5 +1,9 @@
 ## Health Information Management System
 
+基础的crud主要参考：
+
+查询和分页主要参考：https://tutorial101.blogspot.com/2020/03/python-flask-sqlalchemy-search-like.html
+
 使用python3+virtualenv，其他的依赖在`requirements.txt`中列出。
 
 目录结构：
@@ -133,7 +137,7 @@ uwsgi配置文件位于`/var/www/web/config.ini`
 
 
 ### blockchain part
- 
+
 
 1. 下载npm node，检查是否安装成功（若成功返回版本号）
 ```

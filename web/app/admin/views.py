@@ -1,5 +1,5 @@
 import time
-from flask import abort, flash, redirect, render_template, url_for, request, current_app
+from flask import abort, flash, redirect, render_template, url_for, request, current_app, session
 from flask_login import current_user, login_required
 
 from . import admin
@@ -92,36 +92,32 @@ def list_records():
     return render_template('admin/records/records.html',
                            records=records, title='Records')
 
+@admin.route('/list_paged_records/', methods=['GET', 'POST'], defaults={'page': 1})
 @admin.route('/list_paged_records/<int:page>', methods=['GET', 'POST'])
 @login_required
-def list_paged_records(page=None):
+def list_paged_records(page):
     """
     List all records
     """
     check_admin()
-    if page is None:
-        page = 1
-     
-    search_form = SearchForm()
-    #keyword = search_form.search_keyword.data
-    #search_content = request.form.get('search_id')
-    search_content = request.args.get("search_keyword")
-    records = None
-    prev_page_data = None
-    if search_content:
-        flash('searching: ' + search_content)
-    if search_content is not None:
-        records = Record.query.filter(Record.patient_name.like("%"+search_content+"%")).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    else:
-        if prev_page_data is not None:
-            records = prev_page_data
+    records_per_page = current_app.config['POSTS_PER_PAGE']
+    
+    records = Record.query.order_by(Record.time.desc()).paginate(page=page, per_page=records_per_page, error_out=False)
+    print(' >>> form: ', request.form)
+    if 'tag' in session or (request.method == 'POST' and 'tag' in request.form):
+        if 'tag' in session and (not ('tag' in request.form)):
+            tag = session['tag']
         else:
-            records = Record.query.order_by(Record.time.desc()).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    # records = Record.query.all()
-
+            tag = request.form['tag']
+            session['tag'] = tag
+            page = 1
+            
+        search = "%{}%".format(tag)
+        records = Record.query.filter(Record.patient_name.like(search)).paginate(page=page, per_page=records_per_page, error_out=True)
+        return render_template('admin/records/records.html', records=records, tag=tag)
     return render_template('admin/records/records.html',
-                           #records=records, 
-                           page_data=records,
+                           records=records, 
+                           #page_data=records,
                            title='Records')
 
 
