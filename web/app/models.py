@@ -73,6 +73,8 @@ class Record(db.Model):
     description = db.Column(db.String(200))
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
     patient_name = db.Column(db.String(60))
+    lat = db.Column(db.Float())
+    log = db.Column(db.Float())
 
     def __repr__(self):
         return '<Record: {}>'.format(self.name)
