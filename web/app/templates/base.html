@@ -31,6 +31,7 @@
                       <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
                       <li><a href="{{ url_for('user.list_records', id=current_user.id) }}">Records</a></li>
                       <li><a href="{{ url_for('user.profile', id=current_user.id) }}">My Profile</a></li>
+                      <li><a href="{{ url_for('user.blockchain', id=current_user.id) }}">On Chain</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     <li><a><i class="fa fa-user"></i>  Hi, {{ current_user.username }}!</a></li>
