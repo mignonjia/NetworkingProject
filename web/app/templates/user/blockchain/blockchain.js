@@ -4,26 +4,19 @@ web3.eth.getAccounts().then((f) => {
  account = f[0];
 })
 
-abi = JSON.parse(fs.readFileSync('Voting_sol_Voting.abi').toString());
+//abi = JSON.parse('[{"constant":true,"inputs":[{"name":"candidate","type":"bytes32"}],"name":"validCandidate","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"candidate","type":"bytes32"}],"name":"getHash","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"votesReceived","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"hash_md5","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"candidate","type":"bytes32"}],"name":"voteForCandidate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"candidateNames","type":"bytes32[]"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
+abi = JSON.parse('[{"constant":true,"inputs":[],"name":"getHash","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"hash_md5","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]');
+
 
 contract = new web3.eth.Contract(abi);
-contract.options.address = "0xC3a95139775026125596b76BF262E003cfc930B2";
+contract.options.address = "0xDCCdd416eBb79b16ee5EA1520215a9ec5A98c978";
 // update this contract address with your contract address
 
-function changeHash() {
- hash_md5 = 0;
-
- contract.methods.changeHash(web3.utils.asciiToHex(hash_md5)).send({from: '0x4690f82fE53C9144c420eb83441f2dC7E0dbF7b0'}).then((f) => {
-  let div_id = "hash_val";
-  contract.methods.getHash().call().then((f) => {
-   $("#" + div_id).html(f);
-  })
- })
-}
+function getHash() {}
 
 $(document).ready(function() {
-    contract.methods.getHash().call().then((f) => {
-        $("#"+"hash_val").html(f);
-    })
+ contract.methods.getHash().call().then((f) => {
+  $("#hash_val").html(f);
+})
 });
 

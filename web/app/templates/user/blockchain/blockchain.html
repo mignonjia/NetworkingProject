@@ -3,11 +3,16 @@
 {% extends "base.html" %}
 {% block title %}Profile{% endblock %}
 {% block body %}
-
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Hello World DApp</title>
+</head>
+<body class="container"></body>
 <div class="content-section">
   {{ utils.flashed_messages() }}
  <div class="center">
-  <h1>Current record</h1>
+  <h1>Current r</h1>
   <table class="table table-bordered">
    <thead>
     <tr>
@@ -24,9 +29,10 @@
   </table>
  </div>
   <div class="center">
-    <a href="#" onclick="changeHash()" class="btn btn-primary">Put my record on chain.</a>
+    <a href="#" onclick="getHash()" class="btn btn-primary">Put my record on chain.</a>
   </div>
 </div>
+</body>
 <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.2.6/dist/web3.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
 <script src="./blockchain.js"></script>

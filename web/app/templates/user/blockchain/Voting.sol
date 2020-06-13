@@ -9,8 +9,7 @@ contract Voting {
   bytes32 public hash_md5;
 
   /* This is the constructor which will be called once when you
-  deploy the contract to the blockchain. When we deploy the contract,
-  we will pass an array of candidates who will be contesting in the election
+  deploy the contract to the blockchain. 
   */
   constructor() public {
     hash_md5 = 0;
@@ -29,7 +28,7 @@ contract Voting {
     hash_md5 = new_hash;
   }
 
-  function checkHash(bytes32 new_hash) public view returns (uint32){
+  function checkHash(bytes32 new_hash) public view returns (uint8){
     if (hash_md5 == new_hash)
       return 1;
     return 0;
