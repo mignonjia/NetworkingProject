@@ -5,8 +5,6 @@
 {% block title %}
     {% if add_record %}
         Add Record
-        <script src="myScript.js">
-        </script>
         
     {% else %}
       {% if add_record %}
@@ -17,6 +15,7 @@
     {% endif %}
 {% endblock %}
 {% block body %}
+
 <script type="text/javascript">
 // from https://www.cnblogs.com/lijuntao/p/6439596.html
 function showError(error){ 
@@ -40,9 +39,15 @@ function showPosition(position){
   var latlon = position.coords.latitude+','+position.coords.longitude; 
   var lat = position.coords.latitude; //纬度 
   var log = position.coords.longitude; //经度 
-  alert('纬度:'+lat+',经度:'+log); 
-  document.getElementById("lat").innerHTML=lat;
-  document.getElementById("log").innerHTML=log;
+  alert('纬度 =:'+lat+',经度=:'+log); 
+  document.getElementById("latitude").innerHTML=lat;
+  document.getElementById("longitude").innerHTML=log;
+  document.getElementById("Lat").value=lat;
+  document.getElementById("Log").value=log;
+  //form.longitude.value=log;
+  //form.latitude.value=lat;
+  form.log.value=10.0;
+  form.lat.value=12.0;
 }; 
 function getLocation(){ 
   if (navigator.geolocation){ 
@@ -68,10 +73,32 @@ function getLocation(){
               {% endif %}
             {% endif %}
             <br/>
-            {{ wtf.quick_form(form) }}
+            {% if add_record %}
+            <form method="POST" role="form">
+                <div class="form-group">
+                    <label for="name">Name: </label>
+                    <input type="text" class="form-control" id="Name" name="Name" placeholder="record name" value=""> <br>
+                </div>
+                <div class="form-group">
+                    <label for="inputfile">Description: </label>
+                    <textarea class="form-control" name="Description" id="Description" rows="3"></textarea>
+                </div>
+                <div id="divSample" class="hideClass" style="display:none;">
+                    Longitude: <input type="text" id="Log" name="Longitude" placeholder="longitude" value=""> <br>
+                    Latitude: <input type="text" id="Lat" name="Latitude" placeholder="latitude" value=""> <br>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" name="Submit" value="Submit"> <br>
+                    </div>
+                </div>
+            </form>
             <button onclick="getLocation()">获取地理位置信息</button>
-            <p> 纬度：</p><p id="lat"> 纬度信息</p>
-            <p> 经度：</p><p id="log"> 经度信息</p>
+            <p> 纬度：</p><p id="latitude"> 纬度信息</p>
+            <p> 经度：</p><p id="longitude"> 经度信息</p>
+            {% else %}
+            {{ wtf.quick_form(form) }}
+            {% endif %}
         </div>
       </div>
     </div>

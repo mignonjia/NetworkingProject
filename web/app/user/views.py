@@ -1,7 +1,7 @@
 import sys
 import traceback
 import time
-from flask import abort, flash, redirect, render_template, url_for
+from flask import abort, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 
 from . import user
@@ -98,7 +98,7 @@ def list_records(id):
     
     return render_template('user/records/records.html',
                            records=records, title='Records')
-                           
+
 @user.route('/records/add/<int:id>', methods=['GET', 'POST'])
 @login_required
 def add_record(id):
@@ -108,15 +108,19 @@ def add_record(id):
     check_user()
     add_record = True
     
-    patient = db.session.query(Patient).filter(Patient.id==id)
+    #patient = db.session.query(Patient).filter(Patient.id==id)
     # TODO: set default value of Patient to current user.
-    form = EditRecordForm(patient=patient)
     
-    if form.validate_on_submit():
-        record = Record(name=form.name.data,
-            description=form.description.data,
-            patient=form.patient.data,
-            time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),)
+    if request.method == 'POST':
+        print(request.form)
+        lat = request.form['Latitude']
+        log = request.form['Longitude']
+        record = Record(name=request.form['Name'],
+            description=request.form['Description'],
+            patient_id=id,
+            time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+            log=log,
+            lat=lat)
         # TODO: check if record.Patient = id
         try:
             db.session.add(record)
@@ -130,10 +134,10 @@ def add_record(id):
         return redirect(url_for('user.list_records', id=id))
 
     # load record template
-    return render_template('user/records/record.html', action="Add",
-                           add_record=add_record, form=form,
+    else:
+        return render_template('user/records/record.html', action="Add",
+                           add_record=add_record,
                            title="Add Record")
-        
 @user.route('/records/show/<int:id>', methods=['GET', 'POST'])
 @login_required
 def show_record(id):
@@ -142,7 +146,10 @@ def show_record(id):
     """
     check_user()
     record = Record.query.get_or_404(id)
+    print(' rec: ', record.lat)
     form = RecordForm(obj=record)
+    print(' rec: ', form.lat)
+    
     return render_template('user/records/record.html', action="Show",
                            add_record=False, 
                            edit_record=False, 

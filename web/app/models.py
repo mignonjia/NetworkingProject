@@ -16,6 +16,7 @@ class Patient(UserMixin, db.Model):
     # as is the name of the model
     __tablename__ = 'patients'
 
+    ##### Basic Information #####
     id = db.Column(db.Integer, primary_key=True)
     phone_number = db.Column(db.String(14), index=True, unique=True)
     username = db.Column(db.String(60), index=True, unique=True)
@@ -23,15 +24,14 @@ class Patient(UserMixin, db.Model):
     last_name = db.Column(db.String(60), index=True)
     password_hash = db.Column(db.String(128))
     
+    is_admin = db.Column(db.Boolean, default=False)
+    
     ##### Fields for health system. #####
     age = db.Column(db.Integer)
     gender = db.Column(db.Enum('Male', 'Female'))
     height = db.Column(db.Integer)
     health_status = db.Column(db.Enum('Normal', 'Confirmed Case', 'Suspected Case'))
     
-    #department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
-    #role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    is_admin = db.Column(db.Boolean, default=False)
     records = db.relationship('Record', backref='patient', lazy='dynamic')
 
     @property
@@ -67,14 +67,16 @@ class Record(db.Model):
     __tablename__ = 'records'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60)) 
-    # d_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    time = db.Column(db.DateTime, nullable=False) 
-    description = db.Column(db.String(200))
+    
+    name = db.Column(db.String(60)) # name of record 
+    time = db.Column(db.DateTime, nullable=False) # create time of record
+    description = db.Column(db.String(200)) # content of record
+    lat = db.Column(db.Float()) # location where the record was created, lat for latitude, log for longitude
+    log = db.Column(db.Float()) 
+    
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
     patient_name = db.Column(db.String(60))
-    lat = db.Column(db.Float())
-    log = db.Column(db.Float())
+    
 
     def __repr__(self):
         return '<Record: {}>'.format(self.name)

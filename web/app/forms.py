@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, IntegerField, SelectField, TextField
+from wtforms import StringField, SubmitField, TextAreaField, IntegerField, SelectField, TextField, DecimalField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Email
+from wtforms import validators
 
 from .models import Record, Patient
 
@@ -11,15 +12,23 @@ class ReadonlyTextField(TextField):
     return super(ReadonlyTextField, self).__call__(*args, **kwargs)
 
 
+class ReadonlyDecimalField(DecimalField):
+  def __call__(self, *args, **kwargs):
+    kwargs.setdefault('readonly', True)
+    return super(ReadonlyDecimalField, self).__call__(*args, **kwargs)
+
+
     
 class RecordForm(FlaskForm):
     """
-    Form for users to upload physical examination results.
+    Form for users to view physical examination results.
     """
     name = ReadonlyTextField('Name')
     time = ReadonlyTextField('Time')
     patient = ReadonlyTextField()
     description = ReadonlyTextField('Description')
+    lat = ReadonlyDecimalField('Latitude')
+    log = ReadonlyDecimalField('Longitude')
     
 class EditRecordForm(FlaskForm):
     """
@@ -29,13 +38,17 @@ class EditRecordForm(FlaskForm):
     description = TextAreaField('Description', validators=[DataRequired()])
     patient = QuerySelectField(
         query_factory=lambda: Patient.query.all(), get_label="username")
+        
+    lat = DecimalField('Latitude', validators=[validators.optional()])
+    log = DecimalField('Longitude', validators=[validators.optional()])
+    
     submit = SubmitField('Submit')
     
     
 
 class PatientInfoForm(FlaskForm):
     """
-    Form for an user to edit personal profile.
+    Form for an user to view personal profile.
     """
     phone_number = ReadonlyTextField('Phone Number')
     username = ReadonlyTextField('Username')
