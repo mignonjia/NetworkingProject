@@ -129,3 +129,63 @@ flask run
 nginx配置文件位于`/etc/nginx/sites-enabled/default`
 
 uwsgi配置文件位于`/var/www/web/config.ini`
+
+
+
+### blockchain part
+ 
+
+1. 下载npm node，检查是否安装成功（若成功返回版本号）
+```
+npm -v
+node -v
+```
+
+2. 打开路径 NetworkingProject/web/app/templates/user/blockchain，下载ganache-cli，生成模拟链
+```
+npm install ganache-cli web3@1.2.6
+```
+打印Accounts以及keys（默认十个，之后都用第一个Account交易）
+```
+node_modules/.bin/ganache-cli
+
+```
+
+
+3. 我上传的版本已经编译好了合约，所以编译过程省略，下面是部署
+新建命令行窗口，打开路径 NetworkingProject/web/app/templates/user/blockchain，输入
+```
+node
+```
+之后会出现环境（类似直接在命令行敲python的效果），随后依次输入
+```
+Web3 = require('web3')
+web3 = new Web3("http://localhost:8545")
+bytecode = fs.readFileSync('Voting_sol_Voting.bin').toString()
+abi = JSON.parse(fs.readFileSync('Voting_sol_Voting.abi').toString())
+deployedContract = new web3.eth.Contract(abi)
+```
+
+再输入如下命令，注意替换掉'YOUR FIRST ACCOUNT ADDRESS'
+```
+deployedContract.deploy({
+  data: bytecode,
+  arguments: []
+}).send({
+  from: 'YOUR FIRST ACCOUNT ADDRESS',
+  gas: 1500000,
+  gasPrice: web3.utils.toWei('0.00003', 'ether')
+}).then((newContractInstance) => {
+  deployedContract.options.address = newContractInstance.options.address
+  console.log(newContractInstance.options.address)
+});
+```
+返回一串数字，表示了该合约的地址。将该地址复制到我新添加的`blockchain.js`文件的第12行那里，表示要在json中调用合约。
+
+也可以在node中用如下命令调用合约
+```
+deployedContract.methods.getHash().call(console.log)
+```
+返回全0的串就ok了。
+
+4. 打开新的命令行窗口，运行flask run，以用户状态登陆网页，选择On Chain的页面，按理来说就能出现全0的哈希串。但目前是空白（应该是还有bug）

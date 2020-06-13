@@ -64,6 +64,7 @@ def edit_profile(id):
         patient.gender = form.gender
         patient.health_status = form.health_status.data
         db.session.commit()
+        
         flash('You have successfully edited the record.')
 
         # redirect to the records page
@@ -208,3 +209,7 @@ def delete_record(id):
 
     return render_template(title="Delete Record")
 
+@user.route('/blockchain/<int:id>', methods=['GET', 'POST'])
+@login_required
+def blockchain(id):
+    return render_template('user/blockchain/blockchain.html')
