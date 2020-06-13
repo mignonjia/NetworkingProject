@@ -133,6 +133,7 @@ uwsgi配置文件位于`/var/www/web/config.ini`
 
 
 ### blockchain part
+ 
 
 1. 下载npm node，检查是否安装成功（若成功返回版本号）
 ```
@@ -140,7 +141,7 @@ npm -v
 node -v
 ```
 
-2. 下载ganache-cli，生成模拟链
+2. 打开路径 NetworkingProject/web/app/templates/user/blockchain，下载ganache-cli，生成模拟链
 ```
 npm install ganache-cli web3@1.2.6
 ```
@@ -152,7 +153,7 @@ node_modules/.bin/ganache-cli
 
 
 3. 我上传的版本已经编译好了合约，所以编译过程省略，下面是部署
-新建命令行窗口，输入
+新建命令行窗口，打开路径 NetworkingProject/web/app/templates/user/blockchain，输入
 ```
 node
 ```
