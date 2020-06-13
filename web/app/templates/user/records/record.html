@@ -39,15 +39,11 @@ function showPosition(position){
   var latlon = position.coords.latitude+','+position.coords.longitude; 
   var lat = position.coords.latitude; //纬度 
   var log = position.coords.longitude; //经度 
-  alert('纬度 =:'+lat+',经度=:'+log); 
+  alert('纬度 = '+lat+' , 经度 = '+log); 
   document.getElementById("latitude").innerHTML=lat;
   document.getElementById("longitude").innerHTML=log;
   document.getElementById("Lat").value=lat;
   document.getElementById("Log").value=log;
-  //form.longitude.value=log;
-  //form.latitude.value=lat;
-  form.log.value=10.0;
-  form.lat.value=12.0;
 }; 
 function getLocation(){ 
   if (navigator.geolocation){ 

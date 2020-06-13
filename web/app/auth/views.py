@@ -53,7 +53,7 @@ def login():
                 form.password.data):
             # log patient in
             login_user(patient)
-
+            
             # redirect to the appropriate dashboard page
             if patient.is_admin:
                 return redirect(url_for('home.admin_dashboard'))

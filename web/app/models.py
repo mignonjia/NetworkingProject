@@ -9,7 +9,7 @@ from app import db, login_manager
 
 class Patient(UserMixin, db.Model):
     """
-    Create an Patient table
+    Create a Patient table
     """
 
     # Ensures table will be named in plural and not in singular
