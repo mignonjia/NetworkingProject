@@ -109,7 +109,7 @@ def add_record(id):
     check_user()
     add_record = True
     
-    #patient = db.session.query(Patient).filter(Patient.id==id)
+    patient = db.session.query(Patient).filter(Patient.id==id).first()
     # TODO: set default value of Patient to current user.
     
     if request.method == 'POST':
@@ -119,6 +119,7 @@ def add_record(id):
         record = Record(name=request.form['Name'],
             description=request.form['Description'],
             patient_id=id,
+            patient_name=patient.first_name + " " + patient.last_name,
             time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
             log=log,
             lat=lat)

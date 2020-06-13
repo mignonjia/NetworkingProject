@@ -72,7 +72,7 @@ def check_patient_records(id):
 
 
 # Record views
-
+'''
 
 @admin.route('/records', methods=['GET', 'POST'])
 @login_required
@@ -91,7 +91,7 @@ def list_records():
 
     return render_template('admin/records/records.html',
                            records=records, title='Records')
-
+'''
 @admin.route('/list_paged_records/', methods=['GET', 'POST'], defaults={'page': 1})
 @admin.route('/list_paged_records/<int:page>', methods=['GET', 'POST'])
 @login_required
@@ -154,7 +154,7 @@ def add_record():
         db.session.commit()
 
         # redirect to records page
-        return redirect(url_for('admin.list_records'))
+        return redirect(url_for('admin.list_paged_records'))
 
     # load record template
     return render_template('admin/records/record.html', action="Add",
@@ -204,7 +204,7 @@ def edit_record(id):
         flash('You have successfully edited the record.')
 
         # redirect to the records page
-        return redirect(url_for('admin.list_records'))
+        return redirect(url_for('admin.list_paged_records'))
 
     form.description.data = record.description
     form.name.data = record.name
@@ -227,7 +227,7 @@ def delete_record(id):
     flash('You have successfully deleted the record.')
 
     # redirect to the records page
-    return redirect(url_for('admin.list_records'))
+    return redirect(url_for('admin.list_paged_records'))
 
     return render_template(title="Delete Record")
 
