@@ -191,5 +191,3 @@ deployedContract.deploy({
 deployedContract.methods.getHash().call(console.log)
 ```
 返回全0的串就ok了。
-
-4. 打开新的命令行窗口，运行flask run，以用户状态登陆网页，选择On Chain的页面，按理来说就能出现全0的哈希串。但目前是空白（应该是还有bug）

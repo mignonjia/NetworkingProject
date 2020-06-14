@@ -12,7 +12,7 @@ contract Voting {
   deploy the contract to the blockchain. 
   */
   constructor() public {
-    hash_md5 = 0;
+    hash_md5 = 0xf505c980068a9954f02874b9b50fbaac51a6cf353f894c48714755d7d7f8bd65;
   }
 
   // This function returns the total votes a candidate has received so far
@@ -20,9 +20,6 @@ contract Voting {
   function getHash() public view returns (bytes32) {
     return hash_md5;
   }
-
-  // This function increments the vote count for the specified candidate. This
-  // is equivalent to casting a vote
 
   function changeHash(bytes32 new_hash) public {
     hash_md5 = new_hash;
