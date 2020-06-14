@@ -209,8 +209,6 @@ def delete_record(id):
     # redirect to the records page
     return redirect(url_for('user.list_records', id=record.patient_id))
 
-    return render_template(title="Delete Record")
-
 @user.route('/blockchain/<int:id>', methods=['GET', 'POST'])
 @login_required
 def blockchain(id):

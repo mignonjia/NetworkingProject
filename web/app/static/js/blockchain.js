@@ -1,5 +1,4 @@
 
-/*
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
 var account;
 web3.eth.getAccounts().then((f) => {
@@ -20,12 +19,12 @@ function getHash() {}
 $(document).ready(function() {
     alert("成功执行");
     document.getElementById("hash_val").innerHTML = "test";
-    /*
- contract.methods.getHash().call().then((f) => {
-  $("#hash_val").html(f);
-  document.getElementById("hash_val").innerHTML = f;
-})*/
-//});
+    
+    contract.methods.getHash().call().then((f) => {
+    $("#hash_val").html(f);
+    document.getElementById("hash_val").innerHTML = f;
+})
+});
 
 window.onload=function() {
     alert("成功执行test2");
